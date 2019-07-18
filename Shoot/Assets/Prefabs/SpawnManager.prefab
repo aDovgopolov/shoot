@@ -75,4 +75,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 5551926644944116308, guid: 2e6306152ed040f4680523de0b4f8650, type: 3}
+  _powerUp: {fileID: 3336341934080770302, guid: 3f33af24c9531e0449d0cc9b3653c0d5,
+    type: 3}
+  _speedUp: {fileID: 837863336308494293, guid: 44bce19dc244ff84c944c0ba4482d169, type: 3}
   Spawn_Coroutine: {fileID: 0}
+  _powerUps:
+  - {fileID: 3336341934080770302, guid: 3f33af24c9531e0449d0cc9b3653c0d5, type: 3}
+  - {fileID: 837863336308494293, guid: 44bce19dc244ff84c944c0ba4482d169, type: 3}
+  - {fileID: 0}

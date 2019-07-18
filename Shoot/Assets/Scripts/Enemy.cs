@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {	
 	[SerializeField]
 	private float _speed = 5f;
+
 	void Start()
     {
 		transform.position = new Vector3(0, 6, 0);
@@ -21,16 +22,16 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter2D(Collider2D other)
 	{	
 		if(other.tag == "Laser")
 		{
 			Destroy(other.gameObject);
 			Destroy(this.gameObject);
 		}
+
 		if (other.tag == "Player")
 		{
-			// player make damage;
 			Player player = other.transform.GetComponent<Player>();
 			if (player != null) {
 				player.DamagePlayer();

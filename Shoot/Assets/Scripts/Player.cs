@@ -5,34 +5,35 @@ using UnityEngine;
 public class Player :MonoBehaviour
 {
 	[SerializeField]
-	private float _speed = 5f;
+	private float _speed = 7f;
 	[SerializeField]
 	private GameObject laserPrefab;
 	[SerializeField]
+	private GameObject tripleShotPrefab;
+
+	[SerializeField]
 	private float _fireRate = 0.5f;
 	private float _canFire = -1f;
+	private float _canFireTripleShot = -1f;
+	[SerializeField]
+	private float _tripleShotFireRate = 5f;
+
 	[SerializeField]
 	private int _lives = 3;
-	private bool isDead = false;
 
 	[HideInInspector]
 	public static Player instance = null;
-
-	public bool IsDead{
-		get {return isDead;}
-		private set{}
-	}
+	[SerializeField]
+	private bool _isTripleShotAvailable = false;
 
 	void Awake()
 	{
-		//singleton starts
 		if (instance == null)
 			instance = this;
 		else if (instance != this)
 			Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
-		//singleton ends
 	}
 
 	void Start()
@@ -53,7 +54,20 @@ public class Player :MonoBehaviour
 	private void FireLaser()
 	{
 		_canFire = Time.time + _fireRate;
-		Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + 0.8f, 0), Quaternion.identity);
+
+		//if (Time.time > _canFireTripleShot)
+		//{
+		//	_isTripleShotAvailable = true;
+		//	_canFireTripleShot = Time.time + _tripleShotFireRate;
+		//}
+
+		if (_isTripleShotAvailable)
+		{
+			//_isTripleShotAvailable = false;
+			Instantiate(tripleShotPrefab, transform.position, Quaternion.identity);
+		}
+		else
+			Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + 0.8f, 0), Quaternion.identity);
 	}
 
 	private void CalculateMovement()
@@ -96,5 +110,44 @@ public class Player :MonoBehaviour
 			SpawnManager.instance.StopSpawn();
 			//isDead = true;
 		}
+	}
+
+	public void ActivateTripleShop()
+	{
+		_isTripleShotAvailable = true;
+		StartCoroutine(DisableTripleShot());
+	}
+
+	public void ActivateSpeed()
+	{
+
+		Debug.Log("ActivateSpeed method");
+		_speed = _speed * 2;
+		StartCoroutine(DisableSpeed());
+	}
+
+	public void ActivateShield()
+	{
+
+		StartCoroutine(DisableSheild());
+	}
+
+	IEnumerator DisableTripleShot()
+	{
+		yield return new WaitForSeconds(5f);
+		_isTripleShotAvailable = false;
+		yield return null;
+	}
+
+	IEnumerator DisableSpeed()
+	{
+		yield return new WaitForSeconds(5f);
+		_speed = 7f;
+		yield return null;
+	}
+
+	IEnumerator DisableSheild()
+	{
+		yield return new WaitForSeconds(5f);
 	}
 }
