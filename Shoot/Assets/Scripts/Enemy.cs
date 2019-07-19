@@ -6,10 +6,20 @@ public class Enemy : MonoBehaviour
 {	
 	[SerializeField]
 	private float _speed = 5f;
+	[SerializeField]
+	private int enemyScore;
+	private Animator _anim;
+	[SerializeField]
+	private AudioClip _enemyLaserClip;
+	private AudioSource _enemyAudioSource;
 
 	void Start()
     {
 		transform.position = new Vector3(0, 6, 0);
+		_anim = GetComponent<Animator>();
+
+		_enemyAudioSource = GetComponent<AudioSource>();
+		_enemyAudioSource.clip = _enemyLaserClip;
 	}
 	
     void Update()
@@ -23,11 +33,18 @@ public class Enemy : MonoBehaviour
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
-	{	
-		if(other.tag == "Laser")
+	{
+		
+		if (other.tag == "Laser")
 		{
 			Destroy(other.gameObject);
-			Destroy(this.gameObject);
+			_speed = 0;
+			_anim.SetTrigger("OnEnemyDeath");
+			Destroy(GetComponent<BoxCollider2D>());
+			Destroy(this.gameObject, 2.5f);
+			//GetComponent<BoxCollider2D>().gameObject.SetActive(false);
+			Player.instance.AddScore(10); // enemyScore
+			_enemyAudioSource.Play();
 		}
 
 		if (other.tag == "Player")
@@ -36,7 +53,12 @@ public class Enemy : MonoBehaviour
 			if (player != null) {
 				player.DamagePlayer();
 			}
-			Destroy(this.gameObject);
+			_speed = 0;
+			_anim.SetTrigger("OnEnemyDeath");
+			Destroy(this.gameObject, 2.5f);
+			Destroy(GetComponent<BoxCollider2D>());
+			//GetComponent<BoxCollider2D>().gameObject.SetActive(false);
+			_enemyAudioSource.Play();
 		}
 	}
 }

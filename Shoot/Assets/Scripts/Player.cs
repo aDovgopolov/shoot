@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player :MonoBehaviour
 {
@@ -12,6 +13,13 @@ public class Player :MonoBehaviour
 	private GameObject tripleShotPrefab;
 	[SerializeField]
 	private GameObject shield;
+	[SerializeField]
+	private GameObject leftEngineFire;
+	[SerializeField]
+	private GameObject rightEngineFire;
+	[SerializeField]
+	private AudioClip _playerLaserClip;
+	private AudioSource _playerAudioSource;
 	[SerializeField]
 	private float _fireRate = 0.5f;
 	private float _canFire = -1f;
@@ -28,7 +36,8 @@ public class Player :MonoBehaviour
 	private bool _isTripleShotAvailable = false;
 	[SerializeField]
 	private bool _isShieldActive = false;
-
+	[SerializeField]
+	private int _score = 0;
 
 	void Awake()
 	{
@@ -37,47 +46,50 @@ public class Player :MonoBehaviour
 		else if (instance != this)
 			Destroy(gameObject);
 
-		DontDestroyOnLoad(gameObject);
+		//DontDestroyOnLoad(gameObject);
 	}
 
 	void Start()
     {
 		transform.position = new Vector3(0, 0, 0);
-    }
+
+		_playerAudioSource = GetComponent<AudioSource>();
+		_playerAudioSource.clip = _playerLaserClip;
+
+	}
 	
     void Update()
     {
 		CalculateMovement();
 
-		if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+//#if UNITY_ANDROID
+
+//#endif
+
+		if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButton("Fire")) && Time.time > _canFire)
 		{
 			FireLaser();
 		}
+
 	}
 
 	private void FireLaser()
 	{
 		_canFire = Time.time + _fireRate;
 
-		//if (Time.time > _canFireTripleShot)
-		//{
-		//	_isTripleShotAvailable = true;
-		//	_canFireTripleShot = Time.time + _tripleShotFireRate;
-		//}
-
 		if (_isTripleShotAvailable)
 		{
-			//_isTripleShotAvailable = false;
 			Instantiate(tripleShotPrefab, transform.position, Quaternion.identity);
 		}
 		else
 			Instantiate(laserPrefab, new Vector3(transform.position.x, transform.position.y + 0.8f, 0), Quaternion.identity);
+		_playerAudioSource.Play();
 	}
 
 	private void CalculateMovement()
 	{
-		float horizontalInput = Input.GetAxis("Horizontal");
-		float verticalInput = Input.GetAxis("Vertical");
+		float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); //Input.
+		float verticalInput = CrossPlatformInputManager.GetAxis("Vertical");
 
 		Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 		
@@ -110,16 +122,25 @@ public class Player :MonoBehaviour
 		{
 			_isShieldActive = false;
 			shield.gameObject.SetActive(false);
-			// stop anim;
 			return;
 		}
 
 		_lives--;
+		UIManager.instance.UpdateLives(_lives);
+
+		if (_lives == 2)
+			leftEngineFire.gameObject.SetActive(true);
+		if (_lives == 1)
+			rightEngineFire.gameObject.SetActive(true);
+
 		if ( _lives <= 0)
 		{
 			Debug.Log("GameOver");
 			Destroy(this.gameObject);
 			SpawnManager.instance.StopSpawn();
+
+			UIManager.instance.SetGameOverText();
+			GameManager.instance.SetGameOver();
 			//isDead = true;
 		}
 	}
@@ -132,7 +153,6 @@ public class Player :MonoBehaviour
 
 	public void ActivateSpeed()
 	{
-
 		Debug.Log("ActivateSpeed method");
 		_speed = _speed * 2;
 		StartCoroutine(DisableSpeed());
@@ -160,9 +180,10 @@ public class Player :MonoBehaviour
 		yield return null;
 	}
 
-	//IEnumerator DisableSheild()
-	//{
-	//	yield return new WaitForSeconds(5f);
-	//	yield return null;
-	//}
+	public void AddScore(int score)
+	{
+		this._score += score;
+		UIManager.instance.SetScoreText(this._score);
+	}
+
 }

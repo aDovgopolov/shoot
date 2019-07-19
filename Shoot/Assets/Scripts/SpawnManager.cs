@@ -27,7 +27,7 @@ public class SpawnManager : MonoBehaviour
 		else if (instance != this)
 			Destroy(gameObject);
 
-		DontDestroyOnLoad(gameObject);
+		//DontDestroyOnLoad(gameObject);
 	}
 
 	void Start()
@@ -76,10 +76,6 @@ public class SpawnManager : MonoBehaviour
 			{
 				newEnemy.transform.parent = Spawn_Coroutine.transform;
 			}
-			//Debug.Log(Player.instance.IsDead);
-			//if (Player.instance.IsDead == true)
-			//	StopCoroutine(SpawnCoroutine());
-
 			yield return new WaitForSeconds(5f);
 		}
 	}

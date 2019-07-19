@@ -6,11 +6,21 @@ public class Powerup : MonoBehaviour
 {
 	[SerializeField]
 	private float _speed = 3f;
+	[SerializeField]
+	private AudioClip _powerUpClip;
+	//private AudioSource _powerUpAudioSource;
 
 	[SerializeField]
 	private int powerupID;
 
-    void Update()
+	//private void Start()
+	//{
+
+	//	_powerUpAudioSource = GetComponent<AudioSource>();
+	//	_powerUpAudioSource.clip = _powerUpClip;
+	//}
+
+	void Update()
     {
 		transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
@@ -22,15 +32,15 @@ public class Powerup : MonoBehaviour
 	{
 		if (other.tag == "Player")
 		{
-			// player make damage;
 			Player player = other.transform.GetComponent<Player>();
 			if (player != null)
 			{
+				AudioSource.PlayClipAtPoint(_powerUpClip, transform.position);
 				switch (powerupID)
 				{
 					case 0:
 						player.ActivateTripleShop();
-						break;
+						break; 
 					case 1:
 						player.ActivateSpeed();
 						break;
