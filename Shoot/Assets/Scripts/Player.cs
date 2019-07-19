@@ -10,7 +10,8 @@ public class Player :MonoBehaviour
 	private GameObject laserPrefab;
 	[SerializeField]
 	private GameObject tripleShotPrefab;
-
+	[SerializeField]
+	private GameObject shield;
 	[SerializeField]
 	private float _fireRate = 0.5f;
 	private float _canFire = -1f;
@@ -25,6 +26,9 @@ public class Player :MonoBehaviour
 	public static Player instance = null;
 	[SerializeField]
 	private bool _isTripleShotAvailable = false;
+	[SerializeField]
+	private bool _isShieldActive = false;
+
 
 	void Awake()
 	{
@@ -102,6 +106,14 @@ public class Player :MonoBehaviour
 
 	public void DamagePlayer()
 	{
+		if (_isShieldActive)
+		{
+			_isShieldActive = false;
+			shield.gameObject.SetActive(false);
+			// stop anim;
+			return;
+		}
+
 		_lives--;
 		if ( _lives <= 0)
 		{
@@ -128,8 +140,10 @@ public class Player :MonoBehaviour
 
 	public void ActivateShield()
 	{
-
-		StartCoroutine(DisableSheild());
+		Debug.Log("ActivateShield");
+		_isShieldActive = true;
+		shield.gameObject.SetActive(true);
+		//StartCoroutine(DisableSheild());
 	}
 
 	IEnumerator DisableTripleShot()
@@ -146,8 +160,9 @@ public class Player :MonoBehaviour
 		yield return null;
 	}
 
-	IEnumerator DisableSheild()
-	{
-		yield return new WaitForSeconds(5f);
-	}
+	//IEnumerator DisableSheild()
+	//{
+	//	yield return new WaitForSeconds(5f);
+	//	yield return null;
+	//}
 }
