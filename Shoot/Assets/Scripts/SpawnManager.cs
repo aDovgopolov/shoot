@@ -19,7 +19,8 @@ public class SpawnManager : MonoBehaviour
 	[HideInInspector]
 	public static SpawnManager instance = null;
 	private bool _needSpawn = true;
-
+	private bool _isAsteroidDestroed = false;
+	
 	void Awake()
 	{
 		if (instance == null)
@@ -28,13 +29,6 @@ public class SpawnManager : MonoBehaviour
 			Destroy(gameObject);
 
 		//DontDestroyOnLoad(gameObject);
-	}
-
-	void Start()
-	{
-		StartCoroutine(SpawnEnemyCoroutine());
-		StartCoroutine(SpawnPowerUpCoroutine());
-		//StartCoroutine(SpawnSpeedUpCoroutine());
 	}
 
 	IEnumerator SpawnSpeedUpCoroutine()
@@ -78,6 +72,13 @@ public class SpawnManager : MonoBehaviour
 			}
 			yield return new WaitForSeconds(5f);
 		}
+	}
+
+	public void SetFlagAsteroidDestroyed()
+	{
+		//isAsteroidDestroed = true;
+		StartCoroutine(SpawnEnemyCoroutine());
+		StartCoroutine(SpawnPowerUpCoroutine());
 	}
 
 	public void StopSpawn()

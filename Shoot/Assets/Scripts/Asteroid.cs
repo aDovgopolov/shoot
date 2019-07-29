@@ -26,7 +26,7 @@ public class Asteroid : MonoBehaviour
 	{
 		if (other.tag == "Laser")
 		{
-			
+			SpawnManager.instance.SetFlagAsteroidDestroyed();
 			Destroy(other.gameObject);
 			Destroy(this.gameObject);
 			GameObject explotion =  Instantiate(_explotion, transform.position, Quaternion.identity);

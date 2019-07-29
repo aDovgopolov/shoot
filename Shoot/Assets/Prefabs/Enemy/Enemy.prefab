@@ -51,6 +51,8 @@ MonoBehaviour:
   _speed: 5
   enemyScore: 0
   _enemyLaserClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  laserPrefab: {fileID: 6477079927144993786, guid: 7b6493c2145c658409206d844383f033,
+    type: 3}
 --- !u!212 &1318916670605554295
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -130,7 +132,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.01133883, y: 0.09070605}

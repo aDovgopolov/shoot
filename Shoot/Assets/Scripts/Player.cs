@@ -75,6 +75,7 @@ public class Player :MonoBehaviour
 
 	private void FireLaser()
 	{
+		//Debug.Log("FireLaser");
 		_canFire = Time.time + _fireRate;
 
 		if (_isTripleShotAvailable)
